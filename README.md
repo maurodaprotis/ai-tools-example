@@ -173,7 +173,7 @@ For OpenCode, the project-root `AGENTS.md` handles rules, `.opencode/agents` exp
 ## Recommended Workflow
 
 1. Edit `AGENTS.md`, `agents/`, or `skills/`
-2. Re-run `./ai-tools-setup.sh`
+2. Re-run `./ai-tools-setup.sh` if needed
 3. Restart the assistant if needed
 
 If you need to add support for a new assistant, update `ai-tools-setup.sh` once and keep the rest of the structure unchanged.
