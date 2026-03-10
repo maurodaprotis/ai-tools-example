@@ -10,6 +10,7 @@ SETUP_CURSOR=false
 SETUP_CLAUDE=false
 SETUP_GEMINI=false
 SETUP_CODEX=false
+SETUP_OPENCODE=false
 SETUP_COPILOT=false
 
 show_help() {
@@ -21,6 +22,7 @@ show_help() {
   echo "  --claude    Configure Claude Code"
   echo "  --gemini    Configure Gemini"
   echo "  --codex     Configure Codex"
+  echo "  --opencode  Configure OpenCode"
   echo "  --copilot   Configure GitHub Copilot"
   echo "  --help      Show this help message"
 }
@@ -116,6 +118,11 @@ setup_codex() {
   link_dir "$AGENTS_SOURCE" "$REPO_ROOT/.codex/agents"
 }
 
+setup_opencode() {
+  link_dir "$AGENTS_SOURCE" "$REPO_ROOT/.opencode/agents"
+  link_dir "$SKILLS_SOURCE" "$REPO_ROOT/.opencode/skills"
+}
+
 setup_copilot() {
   mkdir -p "$REPO_ROOT/.github"
   cp "$REPO_ROOT/AGENTS.md" "$REPO_ROOT/.github/copilot-instructions.md"
@@ -128,6 +135,7 @@ while [[ $# -gt 0 ]]; do
       SETUP_CLAUDE=true
       SETUP_GEMINI=true
       SETUP_CODEX=true
+      SETUP_OPENCODE=true
       SETUP_COPILOT=true
       shift
       ;;
@@ -147,6 +155,10 @@ while [[ $# -gt 0 ]]; do
       SETUP_CODEX=true
       shift
       ;;
+    --opencode)
+      SETUP_OPENCODE=true
+      shift
+      ;;
     --copilot)
       SETUP_COPILOT=true
       shift
@@ -163,7 +175,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [ "$SETUP_CURSOR" = false ] && [ "$SETUP_CLAUDE" = false ] && [ "$SETUP_GEMINI" = false ] && [ "$SETUP_CODEX" = false ] && [ "$SETUP_COPILOT" = false ]; then
+if [ "$SETUP_CURSOR" = false ] && [ "$SETUP_CLAUDE" = false ] && [ "$SETUP_GEMINI" = false ] && [ "$SETUP_CODEX" = false ] && [ "$SETUP_OPENCODE" = false ] && [ "$SETUP_COPILOT" = false ]; then
   show_help
   exit 0
 fi
@@ -182,6 +194,10 @@ fi
 
 if [ "$SETUP_CODEX" = true ]; then
   setup_codex
+fi
+
+if [ "$SETUP_OPENCODE" = true ]; then
+  setup_opencode
 fi
 
 if [ "$SETUP_COPILOT" = true ]; then

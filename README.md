@@ -17,9 +17,12 @@ Different AI tools look for instructions in different places:
 - Claude Code often uses `CLAUDE.md` plus `.claude/agents/` and `.claude/skills/`
 - Gemini can use `GEMINI.md` plus `.gemini/agents/` and `.gemini/skills/`
 - Codex can read `AGENTS.md` directly, but can also benefit from linked `agents/` and `skills/`
+- OpenCode reads `AGENTS.md` directly at the project root, plus `.opencode/agents/`, and `.opencode/skills/`
 - GitHub Copilot reads `.github/copilot-instructions.md`
 
 Maintaining all of those by hand gets messy fast.
+
+Important: sharing one instruction source does not mean every assistant follows the exact same spec. Metadata formats and sub-task or subagent conventions can differ between tools, so treat this pattern as a shared baseline and adjust for tool-specific behavior when needed.
 
 This repo keeps one canonical set of instructions, then `ai-tools-setup.sh` wires them into the shape each tool expects.
 
@@ -94,11 +97,14 @@ It does things like:
 - create `.cursor/agents -> ../agents`
 - create `CLAUDE.md -> AGENTS.md`
 - create `GEMINI.md -> AGENTS.md`
+- create `.opencode/agents -> ../agents`
+- create `.opencode/skills -> ../skills`
+- keep `AGENTS.md` at the repo root for OpenCode rules
 - copy `AGENTS.md` into `.github/copilot-instructions.md`
 
 It uses relative symlinks for linked folders, so the repo can be moved or committed without baking in absolute paths.
 
-That gives every assistant the same guidance without making you edit five copies.
+That gives every assistant the same guidance without making you edit six copies.
 
 ## Why Use Symlinks
 
@@ -122,7 +128,7 @@ The same idea applies to linked `agents/` and `skills/` folders, and those direc
 
 At a high level, `ai-tools-setup.sh` does four things:
 
-1. Parse CLI flags like `--cursor`, `--claude`, or `--all`
+1. Parse CLI flags like `--cursor`, `--claude`, `--opencode`, or `--all`
 2. Locate the source folders in the repo: `AGENTS.md`, `agents/`, and `skills/`
 3. Create assistant-specific relative symlinks or copies
 4. Print `AI setup complete.`
@@ -132,7 +138,7 @@ Common commands:
 ```bash
 ./ai-tools-setup.sh
 ./ai-tools-setup.sh --all
-./ai-tools-setup.sh --claude --cursor
+./ai-tools-setup.sh --claude --cursor --opencode
 ```
 
 ## Example Output
@@ -156,8 +162,13 @@ CLAUDE.md -> AGENTS.md
 GEMINI.md -> AGENTS.md
 .codex/skills -> ../skills
 .codex/agents -> ../agents
+.opencode/agents -> ../agents
+.opencode/skills -> ../skills
+AGENTS.md
 .github/copilot-instructions.md
 ```
+
+For OpenCode, the project-root `AGENTS.md` handles rules, `.opencode/agents` exposes project-local markdown agents, and `.opencode/skills` exposes project-local reusable skills in the format it expects.
 
 ## Recommended Workflow
 
