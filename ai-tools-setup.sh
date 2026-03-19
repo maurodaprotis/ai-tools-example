@@ -96,6 +96,20 @@ link_agents_alias() {
   ln -s "AGENTS.md" "$target"
 }
 
+setup_shared() {
+  local shared_dir="$REPO_ROOT/.agents"
+
+  if [ -L "$shared_dir" ] || [ -f "$shared_dir" ]; then
+    rm "$shared_dir"
+  elif [ -d "$shared_dir" ]; then
+    rm -rf "$shared_dir"
+  fi
+
+  mkdir -p "$shared_dir"
+  link_dir "$AGENTS_SOURCE" "$shared_dir/agents"
+  link_dir "$SKILLS_SOURCE" "$shared_dir/skills"
+}
+
 setup_cursor() {
   link_dir "$SKILLS_SOURCE" "$REPO_ROOT/.cursor/skills"
   link_dir "$AGENTS_SOURCE" "$REPO_ROOT/.cursor/agents"
@@ -179,6 +193,8 @@ if [ "$SETUP_CURSOR" = false ] && [ "$SETUP_CLAUDE" = false ] && [ "$SETUP_GEMIN
   show_help
   exit 0
 fi
+
+setup_shared
 
 if [ "$SETUP_CURSOR" = true ]; then
   setup_cursor

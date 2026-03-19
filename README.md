@@ -93,6 +93,8 @@ This script is the bridge between your clean source files and each assistant's p
 
 It does things like:
 
+- create `.agents/agents -> ../agents`
+- create `.agents/skills -> ../skills`
 - create `.cursor/skills -> ../skills`
 - create `.cursor/agents -> ../agents`
 - create `CLAUDE.md -> AGENTS.md`
@@ -152,6 +154,8 @@ After running:
 you might end up with:
 
 ```text
+.agents/agents -> ../agents
+.agents/skills -> ../skills
 .cursor/skills -> ../skills
 .cursor/agents -> ../agents
 .claude/skills -> ../skills
@@ -167,6 +171,8 @@ GEMINI.md -> AGENTS.md
 AGENTS.md
 .github/copilot-instructions.md
 ```
+
+Some tools scan a project-root `.agents/` directory directly, so the setup script now creates that directory with linked `agents/` and `skills/` entries in addition to the assistant-specific folders.
 
 For OpenCode, the project-root `AGENTS.md` handles rules, `.opencode/agents` exposes project-local markdown agents, and `.opencode/skills` exposes project-local reusable skills in the format it expects.
 
